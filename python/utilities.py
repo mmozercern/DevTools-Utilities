@@ -21,6 +21,9 @@ def getCMSSWMajorVersion():
 def getCMSSWMinorVersion():
     return os.environ['CMSSW_VERSION'].split('_')[2]
 
+def getCMSSWVersion():
+    return ''.join([getCMSSWMajorVersion(),getCMSSWMinorVersion(),'X'])
+
 def sumWithError(*args):
     val = sum([x[0] for x in args])
     err = (sum([x[1]**2 for x in args]))**0.5
