@@ -199,7 +199,7 @@ def submit_crab(args):
     elif args.inputDirectory:
         submit_untracked_crab(args)
     else:
-        log.warning('Unrecognized submit configuration.')
+        log.warning('Unrecognized submit configuration: include --inputDirectory, --samples, or --sampleList.')
 
 
 def status_crab(args):
@@ -389,7 +389,7 @@ def submit_condor(args):
     if args.inputDirectory:
         submit_untracked_condor(args)
     else:
-        log.warning('Unrecognized submit configuration.')
+        log.warning('Unrecognized submit configuration: include --inputDirectory.')
 
 def status_condor(args):
     '''Check jobs on condor'''
