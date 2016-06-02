@@ -29,6 +29,11 @@ def sumWithError(*args):
     err = (sum([x[1]**2 for x in args]))**0.5
     return (val,err)
 
+def diffWithError(a,b):
+    val = a[0]-b[0]
+    err = (a[1]**2 + b[1]**2)**0.5
+    return (val,err)
+
 def prod(iterable):
     return reduce(operator.mul, iterable, 1)
 
