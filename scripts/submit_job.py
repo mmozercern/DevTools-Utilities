@@ -103,7 +103,7 @@ def get_config(args):
     if args.applyLumiMask=='Collisions16':
         config.Data.lumiMask        = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
                                       'Collisions16/13TeV/'\
-                                      'Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
+                                      'Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt' # 804.2/pb
         #config.Data.splitting       = 'LumiBased'
         #config.Data.unitsPerJob     = args.lumisPerJob
 
