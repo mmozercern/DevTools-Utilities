@@ -1,6 +1,7 @@
 import os
 import sys
 import errno
+import operator
 
 # common definitions
 ZMASS = 91.1876
@@ -29,6 +30,11 @@ def sumWithError(*args):
     err = (sum([x[1]**2 for x in args]))**0.5
     return (val,err)
 
+def diffWithError(a,b):
+    val = a[0]-b[0]
+    err = (a[1]**2 + b[1]**2)**0.5
+    return (val,err)
+
 def prod(iterable):
     return reduce(operator.mul, iterable, 1)
 
@@ -39,5 +45,5 @@ def prodWithError(*args):
 
 def divWithError(num,denom):
     val = num[0]/denom[0] if denom[0] else 0.
-    err = val * ((num[1]/num[0])**2 + (denom[1]/denom[0])**2)**0.5
+    err = val * ((num[1]/num[0])**2 + (denom[1]/denom[0])**2)**0.5 if num[0] and denom[0] else 0.
     return (val, err)
