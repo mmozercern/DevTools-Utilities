@@ -26,7 +26,7 @@ normtags = {
 }
 
 def getNormtag(runPeriod):
-    if runPeriod in normtag: return normtag[runPeriod]
+    if runPeriod in normtags: return normtags[runPeriod]
 
 # helper functions
 def python_mkdir(dir):
