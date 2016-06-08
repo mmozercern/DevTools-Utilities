@@ -6,6 +6,28 @@ import operator
 # common definitions
 ZMASS = 91.1876
 
+# jsons
+jsons = {
+    'Collisions15': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
+                    'Collisions15/13TeV/'\
+                    'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt',
+    'Collisions16': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
+                    'Collisions16/13TeV/'\
+                    'Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt', # 804.2/pb
+}
+
+def getJson(runPeriod):
+    if runPeriod in jsons: return jsons[runPeriod]
+
+# normatags
+normtags = {
+    'Collisions15': '/afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json',
+    'Collisions16': '/afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json',
+}
+
+def getNormtag(runPeriod):
+    if runPeriod in normtag: return normtag[runPeriod]
+
 # helper functions
 def python_mkdir(dir):
     '''A function to make a unix directory as well as subdirectories'''

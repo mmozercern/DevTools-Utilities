@@ -29,6 +29,7 @@ try:
 except:
     crabLoaded = False
 
+from DevTools.Utilities.utilities import getJson
 
 
 def get_crab_workArea(args):
@@ -96,14 +97,8 @@ def get_config(args):
     config.Data.outLFNDirBase       = '/store/user/{0}/{1}/'.format(uname,args.jobName)
     config.Data.publication         = args.publish
     config.Data.outputDatasetTag    = args.jobName
-    if args.applyLumiMask=='Collisions15':
-        config.Data.lumiMask        = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
-                                      'Collisions15/13TeV/'\
-                                      'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt'
-    if args.applyLumiMask=='Collisions16':
-        config.Data.lumiMask        = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
-                                      'Collisions16/13TeV/'\
-                                      'Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt' # 804.2/pb
+    if args.applyLumiMask:
+        config.Data.lumiMask        = getJson(args.applyLumiMask)
         #config.Data.splitting       = 'LumiBased'
         #config.Data.unitsPerJob     = args.lumisPerJob
 
