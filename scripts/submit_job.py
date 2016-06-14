@@ -13,6 +13,7 @@ import math
 import sys
 import glob
 import subprocess
+import fnmatch
 from socket import gethostname
 
 log = logging.getLogger("submit_job")
@@ -342,6 +343,10 @@ def submit_untracked_condor(args):
             submitMap = {}
             # iterate over samples
             for sample in sampleList:
+                submitSample = False
+                for sampleFilter in args.sampleFilter:
+                    if fnmatch.fnmatch(sample,sampleFilter): submitSample = True
+                if not submitSample: continue
                 # farmout config
                 command = 'farmoutAnalysisJobs --infer-cmssw-path'
                 if hasattr(args,'scriptExe') and args.scriptExe:
@@ -544,6 +549,10 @@ def parse_command_line(argv):
         help='Top level directory to submit (unix wildcards allowed). Each subdirectory will create one condor job.'
     )
 
+    parser_condorSubmit.add_argument('--sampleFilter', type=str, nargs='*', default=['*'],
+        help='Only submit selected samples, unix wild cards allowed'
+    )
+
     parser_condorSubmit.add_argument('--applyLumiMask',type=str, default=None,
         choices=['Collisions15','Collisions16'],
         help='Apply the latest golden json run lumimask to data'
@@ -554,7 +563,7 @@ def parse_command_line(argv):
         help='DAS instance to search for input files'
     )
 
-    parser_condorSubmit_jobs = parser_condorSubmit.add_mutually_exclusive_group(required=True)
+    parser_condorSubmit_jobs = parser_condorSubmit.add_mutually_exclusive_group()
     parser_condorSubmit_jobs.add_argument('--filesPerJob', type=int, default=1,
         help='Number of files per job'
     )
