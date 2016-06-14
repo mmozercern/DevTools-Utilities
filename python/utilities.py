@@ -10,10 +10,10 @@ ZMASS = 91.1876
 jsons = {
     'Collisions15': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
                     'Collisions15/13TeV/'\
-                    'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt',
+                    'Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt', # 2.32/fb
     'Collisions16': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
                     'Collisions16/13TeV/'\
-                    'Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt', # 804.2/pb
+                    'Cert_271036-274421_13TeV_PromptReco_Collisions16_JSON.txt', # 2.07/fb
 }
 
 def getJson(runPeriod):
