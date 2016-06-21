@@ -11,7 +11,7 @@ requests.packages.urllib3.disable_warnings()
 def parse_command_line(argv):
     parser = argparse.ArgumentParser(description='Get cross section from McM')
 
-    parser.add_argument('dataset',type=str,help='Input top-level directory to merge, merges each subdirectory into a single file.')
+    parser.add_argument('dataset',type=str,help='Dataset name for query')
 
     args = parser.parse_args(argv)
 

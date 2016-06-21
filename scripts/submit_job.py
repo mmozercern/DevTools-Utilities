@@ -343,10 +343,11 @@ def submit_untracked_condor(args):
             submitMap = {}
             # iterate over samples
             for sample in sampleList:
-                submitSample = False
-                for sampleFilter in args.sampleFilter:
-                    if fnmatch.fnmatch(sample,sampleFilter): submitSample = True
-                if not submitSample: continue
+                if hasattr(args,'sampleFilter'):
+                    submitSample = False
+                    for sampleFilter in args.sampleFilter:
+                        if fnmatch.fnmatch(sample,sampleFilter): submitSample = True
+                    if not submitSample: continue
                 # farmout config
                 command = 'farmoutAnalysisJobs --infer-cmssw-path'
                 if hasattr(args,'scriptExe') and args.scriptExe:
