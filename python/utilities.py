@@ -28,6 +28,7 @@ normtags = {
 def getNormtag(runPeriod):
     if runPeriod in normtags: return normtags[runPeriod]
 
+
 # helper functions
 def python_mkdir(dir):
     '''A function to make a unix directory as well as subdirectories'''
