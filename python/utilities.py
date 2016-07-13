@@ -3,6 +3,7 @@ import sys
 import errno
 import operator
 import subprocess
+import math
 
 # common definitions
 ZMASS = 91.1876
@@ -71,6 +72,26 @@ def divWithError(num,denom):
     val = num[0]/denom[0] if denom[0] else 0.
     err = val * ((num[1]/num[0])**2 + (denom[1]/denom[0])**2)**0.5 if num[0] and denom[0] else 0.
     return (val, err)
+
+def sqrtWithError(a):
+    val = a[0]**0.5
+    err = 0.5*a[1]
+    return (val,err)
+
+def sOverB(s,b):
+    return s[0]/b[0] if b[0] else 0.
+
+def poissonSignificance(s,b):
+    return s[0]/b[0]**0.5 if b[0] else 0.
+
+def poissonSignificanceWithError(s,b):
+    return s[0]/(b[0]+b[1]**2)**0.5 if b else 0.
+
+def asimovSignificance(s,b):
+    return (2*((s[0]+b[0])*math.log(1+s[0]/b[0])-1))**0.5 if b[0] else 0.
+
+def asimovSignificanceWithError(s,b):
+    return (2*((s[0]+b[0])*math.log((s[0]+b[0])*(b[0]+b[1]**2)/(b[0]**2+(s[0]+b[0])*b[1]**2))-b[0]**2/b[1]**2*math.log(1+b[1]**2*s[0]/(b[0]*(b[0]+b[1]**2)))))**0.5 if b else 0.
 
 # hdfs functions
 def strip_hdfs(directory):

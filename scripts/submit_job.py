@@ -400,7 +400,7 @@ def status_condor(args):
             for j in jobDirs:
                 results[d][j] = {}
                 # completed jobs have a report.log in the submission directory
-                if os.path.exists('{0}/report.log'.format(j)):
+                if os.path.exists(os.path.join(j,'report.log')):
                     # parse report.log TODO lookup possible exit codes
                     results[d][j]['status'] = 'FINISHED'
                 else:
