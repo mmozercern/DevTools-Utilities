@@ -3,6 +3,7 @@ import sys
 import errno
 import operator
 import subprocess
+import logging
 import math
 
 # common definitions
@@ -91,7 +92,7 @@ def asimovSignificance(s,b):
     return (2*((s[0]+b[0])*math.log(1+s[0]/b[0])-1))**0.5 if b[0] else 0.
 
 def asimovSignificanceWithError(s,b):
-    return (2*((s[0]+b[0])*math.log((s[0]+b[0])*(b[0]+b[1]**2)/(b[0]**2+(s[0]+b[0])*b[1]**2))-b[0]**2/b[1]**2*math.log(1+b[1]**2*s[0]/(b[0]*(b[0]+b[1]**2)))))**0.5 if b else 0.
+    return (2*((s[0]+b[0])*math.log((s[0]+b[0])*(b[0]+b[1]**2)/(b[0]**2+(s[0]+b[0])*b[1]**2))-b[0]**2/b[1]**2*math.log(1+b[1]**2*s[0]/(b[0]*(b[0]+b[1]**2)))))**0.5 if b[0] and b[1] else 0.
 
 # hdfs functions
 def strip_hdfs(directory):
@@ -103,7 +104,7 @@ def hdfs_ls_directory(storeDir):
     command = 'gfal-ls srm://cmssrm2.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/{0}'.format(storeDir)
     out = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT).communicate()[0]
     if 'gfal-ls' in out:
-        log.error(out)
+        logging.error(out)
         return []
     return out.split()
 
