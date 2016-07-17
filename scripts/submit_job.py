@@ -75,6 +75,8 @@ def get_config(args):
         config.Data.lumiMask        = getJson(args.applyLumiMask)
         #config.Data.splitting       = 'LumiBased'
         #config.Data.unitsPerJob     = args.lumisPerJob
+    if args.allowNonValid:
+        config.Data.allowNonValidInputDataset = True
 
     config.Site.storageSite         = 'T2_US_Wisconsin'
 
@@ -471,6 +473,8 @@ def parse_command_line(argv):
     parser_crabSubmit.add_argument('--lumisPerJob', type=int, default=30,
         help='Number of lumis per job'
     )
+
+    parser_crabSubmit.add_argument('--allowNonValid', action='store_true', help='Allow non valid datasets from DAS')
 
     parser_crabSubmit.add_argument('--publish', action='store_true', help='Publish output to DBS')
 
