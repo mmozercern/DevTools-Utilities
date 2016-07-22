@@ -10,19 +10,20 @@ import ROOT
 
 def print_detailed_wz(rtrow):
     print '{0}:{1}:{2}'.format(rtrow.run, rtrow.lumi, rtrow.event)
-    print '    Triggers:'
-    for trigger in [
-        'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
-        'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
-        'Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ',
-        'Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL',
-        'Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL',
-        'IsoMu20',
-        'IsoTkMu20',
-        'IsoMu27',
-        'Ele23_WPLoose_Gsf',
-        ]:
-        print '        {0} {1}'.format(getattr(rtrow,'pass{0}'.format(trigger)),trigger)
+    #print '    Triggers:'
+    #for trigger in [
+    #    'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
+    #    'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
+    #    'Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ',
+    #    'Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL',
+    #    'Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL',
+    #    'IsoMu20',
+    #    'IsoTkMu20',
+    #    'IsoMu27',
+    #    'Ele23_WPLoose_Gsf',
+    #    ]:
+    #    print '        {0} {1}'.format(getattr(rtrow,'pass{0}'.format(trigger)),trigger)
+    print '    z_mass: {0}, z1: {1}, z2: {2}'.format(rtrow.z_mass,rtrow.z1_pt,rtrow.z2_pt)
 
 
 def parse_command_line(argv):
