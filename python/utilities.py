@@ -5,6 +5,8 @@ import operator
 import subprocess
 import logging
 import math
+import json
+import pickle
 
 # common definitions
 ZMASS = 91.1876
@@ -93,6 +95,17 @@ def asimovSignificance(s,b):
 
 def asimovSignificanceWithError(s,b):
     return (2*((s[0]+b[0])*math.log((s[0]+b[0])*(b[0]+b[1]**2)/(b[0]**2+(s[0]+b[0])*b[1]**2))-b[0]**2/b[1]**2*math.log(1+b[1]**2*s[0]/(b[0]*(b[0]+b[1]**2)))))**0.5 if b[0] and b[1] else 0.
+
+def dumpResults(results,analysis,name):
+    jfile = 'jsons/{0}/{1}.json'.format(analysis,name)
+    pfile = 'pickles/{0}/{1}.pkl'.format(analysis,name)
+    python_mkdir(os.path.dirname(jfile))
+    python_mkdir(os.path.dirname(pfile))
+    with open(jfile,'w') as f:
+        f.write(json.dumps(results, indent=4, sort_keys=True))
+    with open(pfile,'wb') as f:
+        pickle.dump(results,f)
+
 
 # hdfs functions
 def strip_hdfs(directory):
