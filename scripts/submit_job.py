@@ -338,8 +338,16 @@ def submit_untracked_condor(args):
                     continue
                 fileList = '{0}_inputs.txt'.format(submitDir)
                 with open(fileList,'w') as f:
-                    f.write('\n'.join(inputFiles))
+                    if args.jobsPerFile>1:
+                        jobStrings = []
+                        for job in range(args.jobsPerFile):
+                            for inputFile in inputFiles:
+                                jobStrings += ['{0}/{1}/{2}'.format(inputFile,args.jobsPerFile,job)]
+                        f.write('\n'.join(jobStrings))
+                    else:
+                        f.write('\n'.join(inputFiles))
                 filesPerJob = args.filesPerJob
+                if args.jobsPerFile>1: filesPerJob = len(inputFiles)
                 if args.gigabytesPerJob:
                     totalSize = hdfs_directory_size(os.path.join(inputDirectory,sample))
                     averageSize = totalSize/totalFiles
@@ -548,6 +556,10 @@ def parse_command_line(argv):
 
     parser_condorSubmit_jobs.add_argument('--gigabytesPerJob', type=float, default=0,
         help='Average jobs to process a given number of gigabytes'
+    )
+
+    parser_condorSubmit_jobs.add_argument('--jobsPerFile', type=int, default=1,
+        help='Number of jobs per file. File list will be of the form "fname/njobs/job"'
     )
 
     parser_condorSubmit.add_argument('--dryrun', action='store_true', help='Do not submit jobs')

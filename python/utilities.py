@@ -44,6 +44,10 @@ def python_mkdir(dir):
             pass
         else: raise
 
+def runCommand(command):
+    return subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT).communicate()[0]
+
+
 def getCMSSWMajorVersion():
     return os.environ['CMSSW_VERSION'].split('_')[1]
 
