@@ -354,6 +354,10 @@ def submit_untracked_condor(args):
                     GB = 1024.*1024.*1024.
                     filesPerJob = int(math.ceil(args.gigabytesPerJob*GB/averageSize))
                 command += ' --input-file-list={0} --assume-input-files-exist --input-files-per-job={1}'.format(fileList,filesPerJob)
+                if args.vsize:
+                    command += ' --vsize-limit={0}'.format(args.vsize)
+                if args.useAFS:
+                    command += ' --shared-fs'
                 # output directory
                 outputDir = 'srm://cmssrm2.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/{0}/{1}/{2}'.format(uname,args.jobName,sample)
                 command += ' --output-dir={0}'.format(outputDir)
@@ -562,7 +566,13 @@ def parse_command_line(argv):
         help='Number of jobs per file. File list will be of the form "fname/njobs/job"'
     )
 
+    parser_condorSubmit_jobs.add_argument('--vsize', type=int, default=0,
+        help='Override default vsize for condor'
+    )
+
     parser_condorSubmit.add_argument('--dryrun', action='store_true', help='Do not submit jobs')
+
+    parser_condorSubmit.add_argument('--useAFS', action='store_true', help='Read from AFS rather than creating a usercode')
 
     parser_condorSubmit.add_argument('--useHDFS', action='store_true', help='Use HDFS to read files')
 
