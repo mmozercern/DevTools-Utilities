@@ -566,9 +566,7 @@ def parse_command_line(argv):
         help='Number of jobs per file. File list will be of the form "fname/njobs/job"'
     )
 
-    parser_condorSubmit_jobs.add_argument('--vsize', type=int, default=0,
-        help='Override default vsize for condor'
-    )
+    parser_condorSubmit.add_argument('--vsize', type=int, default=0, help='Override default vsize for condor')
 
     parser_condorSubmit.add_argument('--dryrun', action='store_true', help='Do not submit jobs')
 
