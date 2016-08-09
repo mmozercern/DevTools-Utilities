@@ -610,9 +610,17 @@ def parse_command_line(argv):
         help='Average jobs to process a given number of gigabytes'
     )
 
+    parser_condorMerge_jobs.add_argument('--jobsPerFile', type=int, default=1,
+        help='Number of jobs per file. File list will be of the form "fname/njobs/job"'
+    )
+
+    parser_condorMerge.add_argument('--vsize', type=int, default=0, help='Override default vsize for condor')
+
     parser_condorMerge.add_argument('--dryrun', action='store_true', help='Do not submit jobs')
 
     parser_condorMerge.add_argument('--useHDFS', action='store_true', help='Use HDFS to read files')
+
+    parser_condorMerge.add_argument('--useAFS', action='store_true', help='Read from AFS rather than creating a usercode')
 
     parser_condorMerge.set_defaults(submit=submit_condor)
 
