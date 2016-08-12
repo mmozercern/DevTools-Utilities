@@ -14,6 +14,7 @@ import sys
 import glob
 import subprocess
 import fnmatch
+import json
 from socket import gethostname
 
 log = logging.getLogger("submit_job")
@@ -353,6 +354,15 @@ def submit_untracked_condor(args):
                     averageSize = totalSize/totalFiles
                     GB = 1024.*1024.*1024.
                     filesPerJob = int(math.ceil(args.gigabytesPerJob*GB/averageSize))
+                if hasattr(args,'jsonFilesPerJob') and args.jsonFilesPerJob:
+                    if os.path.isfile(args.jsonFilesPerJob):
+                        with open(args.jsonFilesPerJob) as f:
+                            data = json.load(f)
+                        if sample in data:
+                            filesPerJob = data[sample]
+                    else:
+                        logging.error('JSON map {0} for jobs does not exist'.format(args.jsonFilesPerJob))
+                        return
                 command += ' --input-file-list={0} --assume-input-files-exist --input-files-per-job={1}'.format(fileList,filesPerJob)
                 if args.vsize:
                     command += ' --vsize-limit={0}'.format(args.vsize)
@@ -564,6 +574,10 @@ def parse_command_line(argv):
 
     parser_condorSubmit_jobs.add_argument('--jobsPerFile', type=int, default=1,
         help='Number of jobs per file. File list will be of the form "fname/njobs/job"'
+    )
+
+    parser_condorSubmit_jobs.add_argument('--jsonFilesPerJob', type=str, default='',
+        help='Number of files per job in form of a json file with "sample":num pairs'
     )
 
     parser_condorSubmit.add_argument('--vsize', type=int, default=0, help='Override default vsize for condor')
