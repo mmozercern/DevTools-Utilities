@@ -25,6 +25,10 @@ def print_detailed_wz(rtrow):
     #    print '        {0} {1}'.format(getattr(rtrow,'pass{0}'.format(trigger)),trigger)
     print '    z_mass: {0}, z1: {1}, z2: {2}'.format(rtrow.z_mass,rtrow.z1_pt,rtrow.z2_pt)
 
+def print_detailed_hpp3l(rtrow):
+    print '{0}:{1}:{2}'.format(rtrow.run, rtrow.lumi, rtrow.event)
+    print rtrow.channel, rtrow.genChannel
+    print rtrow.hpp1_pt, rtrow.hpp2_pt, rtrow.hm1_pt
 
 def parse_command_line(argv):
     parser = argparse.ArgumentParser(description="Print events from ntuple")
@@ -64,7 +68,7 @@ def main(argv=None):
         eventkey = '{0}:{1}:{2}'.format(rtrow.run, rtrow.lumi, rtrow.event)
         if args.events and eventkey not in args.events: continue
         if args.detailed:
-            print_detailed_wz(rtrow)
+            print_detailed_hpp3l(rtrow)
         else:
             print eventkey
 
