@@ -16,9 +16,12 @@ jsons = {
     'Collisions15': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
                     'Collisions15/13TeV/'\
                     'Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt', # 2.32/fb
-    'Collisions16': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
+    'ICHEP2016':    '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
                     'Collisions16/13TeV/'\
                     'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt', # 12.9/fb
+    'Collisions16': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
+                    'Collisions16/13TeV/'\
+                    'Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt', # 26.4/fb
 }
 
 def getJson(runPeriod):
@@ -27,6 +30,7 @@ def getJson(runPeriod):
 # normatags
 normtags = {
     'Collisions15': '/afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json',
+    'ICHEP2016':    '/afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json',
     'Collisions16': '/afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json',
 }
 

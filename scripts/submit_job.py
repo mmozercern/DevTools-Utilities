@@ -480,7 +480,7 @@ def parse_command_line(argv):
     )
 
     parser_crabSubmit.add_argument('--applyLumiMask',type=str, default=None,
-        choices=['Collisions15','Collisions16'],
+        choices=['Collisions15','ICHEP2016','Collisions16'],
         help='Apply the latest golden json run lumimask to data'
     )
 
@@ -554,7 +554,7 @@ def parse_command_line(argv):
     )
 
     parser_condorSubmit.add_argument('--applyLumiMask',type=str, default=None,
-        choices=['Collisions15','Collisions16'],
+        choices=['Collisions15','ICHEP2016','Collisions16'],
         help='Apply the latest golden json run lumimask to data'
     )
 
