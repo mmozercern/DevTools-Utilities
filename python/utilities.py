@@ -115,6 +115,12 @@ def dumpResults(results,analysis,name):
     with open(pfile,'wb') as f:
         pickle.dump(results,f)
 
+def readResults(analysis,name):
+    pfile = 'pickles/{0}/{1}.pkl'.format(analysis,name)
+    with open(pfile,'rb') as f:
+        results = pickle.load(f)
+    return results
+
 
 # hdfs functions
 def strip_hdfs(directory):
