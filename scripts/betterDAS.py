@@ -26,8 +26,8 @@ def client(args):
     if args.datasets:
         for dataset in args.datasets:
             datasets = dbsclient.listDatasets(dataset=dataset)
-            for d in datasets:
-                print d['dataset']
+            for d in sorted([dataset['dataset'] for dataset in datasets]):
+                print d
 
 def parse_command_line(argv):
     parser = argparse.ArgumentParser(description='Get information from DBS')
