@@ -21,7 +21,10 @@ def print_detailed_dy(rtrow):
 
 def print_detailed_wz(rtrow):
     print '{0}:{1}:{2}'.format(rtrow.run, rtrow.lumi, rtrow.event)
-    print '    z_mass: {0}, z1: {1}, z2: {2}'.format(rtrow.z_mass,rtrow.z1_pt,rtrow.z2_pt)
+    leps = ['z1','z2','w1']
+    for lep in leps:
+         print '    {0}: pt {1}, eta {2}, phi {3}, pass: {4} passTight: {5}'.format(lep, getVar(rtrow,lep,'pt'), getVar(rtrow,lep,'eta'), getVar(rtrow,lep,'phi'), getVar(rtrow,lep,'passMedium'), getVar(rtrow,lep,'passTight'))
+    print '    z_mass: {0}, met {1}, bveto {2}, 3l_mass {3}, wmll1 {4}, wmll2 {5}'.format(rtrow.z_mass, rtrow.met_pt, rtrow.numBjetsTight30, getattr(rtrow,'3l_mass'), rtrow.w1_z1_mass, rtrow.w1_z2_mass)
 
 def print_detailed_hpp3l(rtrow):
     print '{0}:{1}:{2}'.format(rtrow.run, rtrow.lumi, rtrow.event)
@@ -30,8 +33,30 @@ def print_detailed_hpp3l(rtrow):
 
 def print_detailed_mini(rtrow):
     print '{0}:{1}:{2}'.format(rtrow.run, rtrow.lumi, rtrow.event)
-    for obj in ['electrons','muons','taus','jets','photons']:
-        print '    {0}: {1}'.format(obj,getattr(rtrow,obj+'_count'))
+    for obj in ['electrons','muons','taus','jets']:
+        nobj = getattr(rtrow,obj+'_count')
+        print '    {0}: {1}'.format(obj,nobj)
+        for o in range(nobj):
+            print '        {0}: pt {1} eta {2} phi {3} charge {4}'.format(
+                 o,
+                 getattr(rtrow,obj+'_pt')[o],
+                 getattr(rtrow,obj+'_eta')[o],
+                 getattr(rtrow,obj+'_phi')[o],
+                 getattr(rtrow,obj+'_charge')[o],
+            )
+            if obj=='muons':
+                print '         : isMediumMuonICHEP {0} relPFIsoDeltaBetaR04 {1} relTrackIso {2} dz {3} dxy {4}'.format(
+                    getattr(rtrow,obj+'_isMediumMuonICHEP')[o],
+                    getattr(rtrow,obj+'_relPFIsoDeltaBetaR04')[o],
+                    getattr(rtrow,obj+'_trackIso')[o]/getattr(rtrow,obj+'_pt')[o],
+                    getattr(rtrow,obj+'_dz')[o],
+                    getattr(rtrow,obj+'_dB2D')[o],
+                )
+            if obj=='electrons':
+                print '         : wwLoose {0} cutBasedMedium {1}'.format(
+                    getattr(rtrow,obj+'_wwLoose')[o],
+                    getattr(rtrow,obj+'_cutBasedMedium')[o],
+                )
 
 def parse_command_line(argv):
     parser = argparse.ArgumentParser(description="Print events from ntuple")
@@ -40,6 +65,7 @@ def parse_command_line(argv):
     parser.add_argument('-t','--tree',type=str,default='MiniTree',help='Tree name')
     parser.add_argument('-c','--cut',nargs='?',type=str,default='',help='Cut to be applied to tree')
     parser.add_argument('-e','--events',nargs='*',type=str,default=[],help='Events to print (form: run:lumi:event, space delimited)')
+    parser.add_argument('-ef','--eventsFile',nargs='?',type=str,default='',help='Events file to print (form: run:lumi:event, one per line)')
     parser.add_argument('-d','--detailed',action='store_true',help='Print detailed event information')
     parser.add_argument('--log',nargs='?',type=str,const='INFO',default='INFO',choices=['INFO','DEBUG','WARNING','ERROR','CRITICAL'],help='Log level for logger')
     args = parser.parse_args(argv)
@@ -64,6 +90,11 @@ def main(argv=None):
         tchain.Add(f)
 
     selectedEvents = tchain.CopyTree(args.cut) if args.cut else tchain
+
+    if args.eventsFile:
+       with open(args.eventsFile,'r') as f:
+           for line in f.readlines():
+               args.events += [line.strip()]
 
     rtrow = selectedEvents
     for r in xrange(rtrow.GetEntries()):
