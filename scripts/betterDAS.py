@@ -17,13 +17,13 @@ try:
 except:
     dbsLoaded = False
 
-def client(args):
+def dataset_client(args):
 
     if not dbsLoaded:
         logging.error('You must source a crab environment to use DBS API.\nsource /cvmfs/cms.cern.ch/crab3/crab.sh')
         return
 
-    url = 'https://cmsweb.cern.ch/dbs/prod/global/DBSReader'
+    url = 'https://cmsweb.cern.ch/dbs/prod/{0}/DBSReader'.format(args.instance)
     dbsclient = DbsApi(url)
 
     sortType = {
@@ -55,6 +55,21 @@ def client(args):
                 if not any([fnmatch.fnmatch(d['processed_ds_name'],pn) for pn in args.processNames]): continue
             print(d['dataset'])
     
+def file_client(args):
+
+    if not dbsLoaded:
+        logging.error('You must source a crab environment to use DBS API.\nsource /cvmfs/cms.cern.ch/crab3/crab.sh')
+        return
+
+    url = 'https://cmsweb.cern.ch/dbs/prod/{0}/DBSReader'.format(args.instance)
+    dbsclient = DbsApi(url)
+
+    if args.datasets:
+        files = []
+        for dataset in args.datasets:
+            files += dbsclient.listFiles(dataset=dataset)
+        for f in sorted(files, key=lambda k: k['logical_file_name']):
+            print(f['logical_file_name'])
 
 def parse_command_line(argv):
     parser = argparse.ArgumentParser(description='Get information from DBS')
@@ -65,8 +80,8 @@ def parse_command_line(argv):
     parser_dataset = subparsers.add_parser('dataset', help='Return a list of datasets.')
 
     # full dataset path
-    full_dataset = parser_dataset.add_argument_group(description='Full dataset name. Dataset form: /[primaryDataset]/[processName]/[dataTier]')
-    full_dataset.add_argument('--datasets', type=str, nargs="*", help='Dataset names')
+    dataset_dataset = parser_dataset.add_argument_group(description='Full dataset name. Dataset form: /[primaryDataset]/[processName]/[dataTier]')
+    dataset_dataset.add_argument('--datasets', type=str, nargs="*", help='Dataset names')
     # partial paths
     dataset_components = parser_dataset.add_argument_group(description='Dataset components')
     dataset_components.add_argument('--primaryDatasets', type=str, nargs="*", default=[], help='Primary dataset names')
@@ -74,8 +89,23 @@ def parse_command_line(argv):
     dataset_components.add_argument('--processNames', type=str, nargs="*", default=[], help='Process name')
     dataset_components.add_argument('--dataTiers', type=str, nargs="*", default=[], help='Data tiers for dataset')
 
+    # isntance
+    dataset_instance = parser_dataset.add_argument('--instance', type=str, nargs='?', choices=['global','phys01','phys02','phys03','caf'], default='global', help='Use non-default DBS instance')
+
+    parser_dataset.set_defaults(submit=dataset_client)
+
     # sort order
     parser_dataset.add_argument('--sortOrder', type=str, nargs='?', default='name', choices=['name','time'], help='Define output sort order')
+
+    # return a list of files
+    parser_file = subparsers.add_parser('files', help='Return a list of files.')
+
+    file_dataset = parser_file.add_argument('--datasets', type=str, nargs="*", help='Dataset names')
+
+    # isntance
+    file_instance = parser_file.add_argument('--instance', type=str, nargs='?', choices=['global','phys01','phys02','phys03','caf'], default='global', help='Use non-default DBS instance')
+
+    parser_file.set_defaults(submit=file_client)
 
     return parser.parse_args(argv)
 
@@ -85,7 +115,7 @@ def main(argv=None):
 
     args = parse_command_line(argv)
 
-    client(args)
+    args.submit(args)
 
 if __name__ == "__main__":
     status = main()

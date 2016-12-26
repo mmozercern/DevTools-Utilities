@@ -117,8 +117,16 @@ def dumpResults(results,analysis,name):
 
 def readResults(analysis,name):
     pfile = 'pickles/{0}/{1}.pkl'.format(analysis,name)
-    with open(pfile,'rb') as f:
-        results = pickle.load(f)
+    jfile = 'jsons/{0}/{1}.json'.format(analysis,name)
+    if os.path.exists(pfile):
+        with open(pfile,'rb') as f:
+            results = pickle.load(f)
+    elif os.path.exists(jfile):
+        with open(jfile,'r') as f:
+            results = json.load(f)
+    else:
+        logging.error('{0} {1} does not exist'.format(analysis,name))
+        results = {}
     return results
 
 
