@@ -202,6 +202,7 @@ def status_crab(args):
             try:
                 log.info('Retrieving status of {0}'.format(d))
                 statusMap[d] = crabClientStatus.status(logger,statusArgs)()
+                if args.verbose: print_single_status(args,statusMap[d])
             except HTTPException as hte:
                 log.warning("Status for input directory {0} failed: {1}".format(d, hte.headers))
             except ClientException as cle:
@@ -209,10 +210,24 @@ def status_crab(args):
 
     parse_crab_status(args,statusMap)
 
+
+allowedStates = ['idle','running','transferring','finished','failed','unsubmitted','cooloff','killing','held']
+allowedStatuses = ['COMPLETED','UPLOADED','SUBMITTED','FAILED','QUEUED','SUBMITFAILED','KILLED','KILLFAILED','RESUBMITFAILED','NEW','RESUBMIT','KILL','UNKNOWN']
+
+def print_single_status(args,summary):
+    status = summary['status']
+    log.info('Status: {0}'.format(status))
+    if 'jobs' in summary:
+        singleStateSummary = {}
+        for state in allowedStates: singleStateSummary[state] = 0
+        for j,job in summary['jobs'].iteritems():
+            singleStateSummary[job['State']] += 1
+        for s in allowedStates:
+            if singleStateSummary[s]:
+                log.info('        {0:12} : {1}'.format(s,singleStateSummary[s]))
+
 def parse_crab_status(args,statusMap):
     '''Parse the output of a crab status call'''
-    allowedStatuses = ['COMPLETED','UPLOADED','SUBMITTED','FAILED','QUEUED','SUBMITFAILED','KILLED','KILLFAILED','RESUBMITFAILED','NEW','RESUBMIT','KILL','UNKNOWN']
-    allowedStates = ['idle','running','transferring','finished','failed','unsubmitted','cooloff','killing','held']
     statusSummary = {}
     for status in allowedStatuses: statusSummary[status] = []
     singleStateSummary = {}
