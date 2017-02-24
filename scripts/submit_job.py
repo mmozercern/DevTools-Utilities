@@ -286,15 +286,19 @@ def resubmit_crab(args):
                 resubmit = False
                 total = 0
                 failed = 0
+                allJobStatus = {}
                 if 'jobs' in summary:
                     for j,job in summary['jobs'].iteritems():
                         total += 1
+                        if job['State'] not in allJobStatus: allJobStatus[job['State']] = 0
+                        allJobStatus[job['State']] += 1
                         if job['State'] in ['failed']:
                             failed += 1
                             resubmit = True
                 if resubmit:
                     log.info('Resubmitting {0}'.format(d))
                     log.info('{0} of {1} jobs failed'.format(failed,total))
+                    log.info(' '.join(['{0}: {1}'.format(state,allJobStatus[state]) for state in allowedStates if state in allJobStatus]))
                     resubmitMap[d] = crabClientResubmit.resubmit(logger,resubmitArgs)()
             except HTTPException as hte:
                 log.warning("Submission for input directory {0} failed: {1}".format(d, hte.headers))
