@@ -15,6 +15,7 @@ def parse_command_line(argv):
     parser = argparse.ArgumentParser(description='Extract processed lumi sections.')
 
     parser.add_argument('inputFiles', type=str, nargs='*', help='Input files')
+    parser.add_argument('--treeName', type=str, default='miniTree/LumiTree', help='Lumi tree name')
     parser.add_argument('--log',nargs='?',type=str,const='INFO',default='INFO',choices=['INFO','DEBUG','WARNING','ERROR','CRITICAL'],help='Log level for logger')
 
     return parser.parse_args(argv)
@@ -29,16 +30,13 @@ def main(argv=None):
     loglevel = getattr(logging,args.log)
     logging.basicConfig(format='%(asctime)s.%(msecs)03d %(levelname)s %(name)s: %(message)s', level=loglevel, datefmt='%Y-%m-%d %H:%M:%S', stream=sys.stderr)
 
-    lumiTree = 'LumiTree'
-    treeDir  = 'miniTree'
-
     allfiles = []
     for f in args.inputFiles:
         for fname in glob.glob(f):
             allfiles += [fname]
 
     logging.info('Adding {0} files to tchain'.format(len(allfiles)))
-    tchain = ROOT.TChain('{0}/{1}'.format(treeDir,lumiTree))
+    tchain = ROOT.TChain(args.treeName)
     for fname in allfiles:
         tchain.Add(fname)
 
