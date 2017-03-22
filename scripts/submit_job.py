@@ -344,7 +344,7 @@ def submit_untracked_condor(args):
                         if fnmatch.fnmatch(sample,sampleFilter): submitSample = True
                     if not submitSample: continue
                 # farmout config
-                command = 'farmoutAnalysisJobs --infer-cmssw-path'
+                command = 'farmoutAnalysisJobs --infer-cmssw-path --input-basenames-not-unique'
                 if hasattr(args,'scriptExe') and args.scriptExe:
                     command += ' --fwklite'
                 # submit dir
