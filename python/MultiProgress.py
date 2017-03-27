@@ -27,8 +27,8 @@ def func_wrapper(jobnum, name, func, func_args, func_kwargs):
     location = (0,proc_num[0]-1)
     writer = Writer(location)
     width = int(math.floor(term.width/3))
-    writer.write('{0:3} {1}: Queued'.format(proc_num[0],name[:width]+' '*max(0,width-len(name))))
-    pbar = ProgressBar(widgets=['{0:3} {1}: '.format(proc_num[0],name[:width]+' '*max(0,width-len(name))),' ',SimpleProgress(),' ',Percentage(),' ',Bar(),' ',ETA()],fd=writer,term_width=term.width)
+    writer.write('{0:3} {1}: Queued'.format(proc_num[0],name[:width]+'.'*max(0,width-len(name))))
+    pbar = ProgressBar(widgets=['{0:3} {1}: '.format(proc_num[0],name[:width]+'.'*max(0,width-len(name))),' ',SimpleProgress(),' ',Percentage(),' ',Bar(),' ',ETA()],fd=writer,term_width=term.width)
     return func(*func_args,progressbar=pbar,**func_kwargs)
 
 
