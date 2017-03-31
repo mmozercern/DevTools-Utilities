@@ -421,7 +421,7 @@ def status_condor(args):
     else:
         log.error("Shouldn't be possible to get here")
 
-    allowedStatuses = ['SUBMITTED','RUNNING','ERROR','EVICTED','ABORTED','SUSPENDED','HELD','FINISHED','UNKNOWN']
+    allowedStatuses = ['SUBMITTED','RUNNING','ERROR','EVICTED','ABORTED','SUSPENDED','HELD','FINISHED','UNKNOWN','FAILED']
 
     logstatuses = { # TODO: lookup possible states
         0 : 'SUBMITTED',
@@ -445,8 +445,15 @@ def status_condor(args):
                 results[d][j] = {}
                 # completed jobs have a report.log in the submission directory
                 if os.path.exists(os.path.join(j,'report.log')):
-                    # parse report.log TODO lookup possible exit codes
-                    results[d][j]['status'] = 'FINISHED'
+                    # parse report.log
+                    with open(os.path.join(j,'report.log')) as f:
+                        statusString = f.readlines()[-1].strip().replace('params : ','').replace("'",'"')
+                        status = json.loads(statusString)
+                        exitCode = int(status['JobExitCode'])
+                    if exitCode:
+                        results[d][j]['status'] = 'FAILED'
+                    else:
+                        results[d][j]['status'] = 'FINISHED'
                 else:
                     # load log file
                     logfile = '{0}/{1}.log'.format(j,os.path.basename(j))

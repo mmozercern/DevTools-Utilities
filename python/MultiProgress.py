@@ -7,7 +7,7 @@ import logging.handlers
 import math
 from multiprocessing import Pool, current_process, Process, Queue
 from blessings import Terminal
-from progressbar import ProgressBar, Bar, ETA, Percentage, SimpleProgress
+from progressbar import ProgressBar, Bar, ETA, Percentage, SimpleProgress, Timer
 
 term = Terminal()
 
@@ -70,7 +70,7 @@ class MultiProgress(object):
         width = int(math.floor(term.width/3))
         name = 'Total'
         writer.write('{0:3} {1}: Queued'.format('',name[:width]+' '*max(0,width-len(name))))
-        pbar = ProgressBar(widgets=['{0:3} {1}: '.format('',name[:width]+' '*max(0,width-len(name))),' ',SimpleProgress(),' ',Percentage(),' ',Bar(),' ',ETA()],fd=writer,term_width=term.width, maxval=self.total).start()
+        pbar = ProgressBar(widgets=['{0:3} {1}: '.format('',name[:width]+' '*max(0,width-len(name))),' ',SimpleProgress(),' ',Percentage(),' ',Bar(),' ',Timer()],fd=writer,term_width=term.width, maxval=self.total).start()
         try:
             while True:
                numleft_new = self.jobsRemaining()
