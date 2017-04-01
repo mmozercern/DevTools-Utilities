@@ -447,13 +447,20 @@ def status_condor(args):
                 if os.path.exists(os.path.join(j,'report.log')):
                     # parse report.log
                     with open(os.path.join(j,'report.log')) as f:
-                        statusString = f.readlines()[-1].strip().replace('params : ','').replace("'",'"')
-                        status = json.loads(statusString)
-                        exitCode = int(status['JobExitCode'])
-                    if exitCode:
-                        results[d][j]['status'] = 'FAILED'
-                    else:
-                        results[d][j]['status'] = 'FINISHED'
+                        try:
+                            statusString = f.readlines()[-1].strip().replace('params : ','').replace("'",'"')
+                            status = json.loads(statusString)
+                            if 'JobExitCode' in status:
+                                exitCode = int(status['JobExitCode'])
+                                if exitCode:
+                                    results[d][j]['status'] = 'FAILED'
+                                else:
+                                    results[d][j]['status'] = 'FINISHED'
+                            else:
+                                results[d][j]['status'] = 'RUNNING'
+                        except:
+                            logging.error('Failed to parse {0}'.format(j))
+                            results[d][j]['status'] = 'UNKNOWN'
                 else:
                     # load log file
                     logfile = '{0}/{1}.log'.format(j,os.path.basename(j))
