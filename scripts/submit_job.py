@@ -350,6 +350,9 @@ def submit_untracked_condor(args):
                 # submit dir
                 submitDir = '{0}/{1}'.format(workArea, sample)
                 command += ' --submit-dir={0}'.format(submitDir)
+                if os.path.exists(submitDir) and not args.resubmit:
+                    logging.warning('Submit directory exists {0}'.format(submitDir))
+                    continue
                 # input files
                 inputFiles = get_hdfs_root_files(inputDirectory,sample)
                 totalFiles = len(inputFiles)
