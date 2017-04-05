@@ -97,13 +97,26 @@ def poissonSignificance(s,b):
     return s[0]/b[0]**0.5 if b[0] else 0.
 
 def poissonSignificanceWithError(s,b):
-    return s[0]/(b[0]+b[1]**2)**0.5 if b else 0.
+    return s[0]/(b[0]+b[1]**2)**0.5 if b[0] or b[1] else 0.
 
 def asimovSignificance(s,b):
-    return (2*((s[0]+b[0])*math.log(1+s[0]/b[0])-1))**0.5 if b[0] else 0.
+    if b[1]>b[0]: b = (b[1],b[1]) # avoid negative stuff
+    if not b[0]: return 0.
+    sPlusB = s[0]+b[0]
+    sOverB = s[0]/b[0]
+    if sOverB<1e-5: return poissonSignificance(s,b) # avoid floating point problems with small s
+    #return (2*(sPlusB*math.log(1+sOverB)-1))**0.5
+    return (2*(sPlusB*math.log(1+sOverB)-s[0]))**0.5 # another source
 
 def asimovSignificanceWithError(s,b):
-    return (2*((s[0]+b[0])*math.log((s[0]+b[0])*(b[0]+b[1]**2)/(b[0]**2+(s[0]+b[0])*b[1]**2))-b[0]**2/b[1]**2*math.log(1+b[1]**2*s[0]/(b[0]*(b[0]+b[1]**2)))))**0.5 if b[0] and b[1] else 0.
+    if b[1]>b[0]: b = (b[1],b[1]) # avoid negative stuff
+    if not b[0]: return 0.
+    if not b[1]: return asimovSignificance(s,b) # no error on background
+    sPlusB = s[0]+b[0]
+    sOverB = s[0]/b[0]
+    bOverE = b[0]/b[1]
+    if sOverB<1e-5: return poissonSignificanceWithError(s,b) # avoid floating point problems with small s
+    return (2*(sPlusB*math.log(sPlusB*(b[0]+b[1]**2)/(b[0]**2+sPlusB*b[1]**2))-bOverE**2*math.log(1+b[1]**2*s[0]/(b[0]*(b[0]+b[1]**2)))))**0.5
 
 def dumpResults(results,analysis,name):
     jfile = 'jsons/{0}/{1}.json'.format(analysis,name)
