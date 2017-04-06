@@ -6,11 +6,18 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function(){
-  $('.dropdown-submenu a.test').on("click", function(e){
-    $(this).next('ul').toggle();
-    e.stopPropagation();
-    e.preventDefault();
-  });
+    $('.dropdown-submenu a.test').on("click", function(e){
+        $(this).next('ul').toggle();
+        e.stopPropagation();
+        e.preventDefault();
+    });
+});
+
+$(function() {
+    $('.pop').on('click', function() {
+        $('.imagepreview').attr('src', $(this).find('img').attr('src'));
+        $('#imagemodal').modal('show');   
+    });     
 });
 </script>
 <style>
@@ -23,10 +30,13 @@ $(document).ready(function(){
     left: 100%;
     margin-top: -1px;
 }
-</style>
-</head>
-<body>
 
+// prevent scrolling
+//body.modal-open {
+//    overflow: hidden;
+//    position: fixed;
+//}
+</style>
 <?php
 
 $dirFilter = $imgFilter = "";
@@ -90,7 +100,7 @@ function displayImages($baseDir) {
             $imageName = basename($image,".png");
             print "<div style=\"float:left\">";
             print "<center>$imageName</center><br/>";
-            print "<img src=\"$image\" style=\"border: none; width: 40ex; \"><br\>";
+            print "<a href=\"javascript:void(0)\" class=\"pop\"><img src=\"$image\" style=\"border: none; width: 40ex; \"></a><br\>";
             print "<center>[<a href=\"pdf/$baseDir/$imageName.pdf\">pdf</a>] - [<a href=\"pdf/$baseDir/$imageName.root\">root</a>]</center>";
             print "</div>";
         }
@@ -113,7 +123,6 @@ function addLink($dir) {
     $numImages = count($images);
     if ($numImages) {
         $newURL = url(array("dirFilter"=>$dirName));
-        #print "<a href=\"$newURL\">$dir</a> [$numImages]<br/>";
         print "<li><a tabindex=\"-1\" href=\"$newURL\">$dirName</a></li>";
     }
 }
@@ -125,6 +134,7 @@ function addSubMenu($dir) {
         print "<li class=\"dropdown-submenu\">";
         print "<a class=\"test\" tabindex=\"-1\" href=\"#\">$dirName<span class=\"caret\"></span></a>";
         print "<ul class=\"dropdown-menu\">";
+        addLink($dir);
         foreach ($subDirs as $subDir) {
             addSubMenu($subDir);
         }
@@ -154,6 +164,11 @@ function display() {
 }
 
 ?>
+</head>
+
+<body>
+
+<div class="allContent">
 
 <?php buildMenu(); ?>
 <br/>
@@ -168,6 +183,19 @@ function display() {
 
 <div class="content">
 <?php display(); ?>
+</div>
+
+</div>
+
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">              
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <img src="" class="imagepreview" style="width: 100%;" >
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>
