@@ -77,12 +77,12 @@ def prod(iterable):
 
 def prodWithError(*args):
     val = prod([x[0] for x in args])
-    err = val * (sum([(x[1]/x[0])**2 for x in args if x[0]]))**0.5
+    err = abs(val) * (sum([(x[1]/x[0])**2 for x in args if x[0]]))**0.5
     return (val,err)
 
 def divWithError(num,denom):
     val = num[0]/denom[0] if denom[0] else 0.
-    err = val * ((num[1]/num[0])**2 + (denom[1]/denom[0])**2)**0.5 if num[0] and denom[0] else 0.
+    err = abs(val) * ((num[1]/num[0])**2 + (denom[1]/denom[0])**2)**0.5 if num[0] and denom[0] else 0.
     return (val, err)
 
 def sqrtWithError(a):

@@ -487,7 +487,11 @@ def status_condor(args):
         for s in allowedStatuses:
             jobs = [key for key,val in results[d].iteritems() if val['status']==s]
             total[s] += len(jobs)
-            if len(jobs) and args.verbose: log.info('    {0:20}: {1}'.format(s,len(jobs)))
+            if len(jobs) and args.verbose:
+                log.info('    {0:20}: {1}'.format(s,len(jobs)))
+                if s=='FAILED':
+                    for j in jobs:
+                        log.info('      {0}'.format(j))
     for s in allowedStatuses:
         if total[s]: log.info('{0:20}: {1}'.format(s,total[s]))
 

@@ -38,7 +38,7 @@ def printSummary(args):
         maxtimes = max(realtimes)/60.
         jobs = len(jobDirs)
         filesPerJob = int(math.ceil(float(jobfiles)/jobs))
-        target = min(int(math.ceil(min(120. * filesPerJob / meantimes, 240. * filesPerJob / maxtimes))),jobfiles)
+        target = min(int(math.ceil(min(120. * filesPerJob / meantimes, 240. * filesPerJob / maxtimes))),jobfiles) if meantimes and maxtimes else 1
         table.add_row([sample,jobfiles,jobs,filesPerJob,'{0:.2f}'.format(meantimes),'{0:.2f}'.format(maxtimes),target])
         targetJson[sample] = target
     print table.get_string()
