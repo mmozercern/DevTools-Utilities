@@ -30,6 +30,7 @@ def print_detailed_hpp3l(rtrow):
     print '{0}:{1}:{2}'.format(rtrow.run, rtrow.lumi, rtrow.event)
     print rtrow.channel, rtrow.genChannel
     print rtrow.hpp1_pt, rtrow.hpp2_pt, rtrow.hm1_pt
+    print rtrow.hpp_mass, rtrow.hm_mt
 
 def print_detailed_mini(rtrow):
     print '{0}:{1}:{2}'.format(rtrow.run, rtrow.lumi, rtrow.event)
