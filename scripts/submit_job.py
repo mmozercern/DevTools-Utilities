@@ -37,7 +37,7 @@ from DevTools.Utilities.utilities import getJson, strip_hdfs, hdfs_ls_directory,
 def get_crab_workArea(args):
     '''Get the job working area'''
     uname = os.environ['USER']
-    scratchDir = 'data' if 'uwlogin' in gethostname() else 'nfs_scratch'
+    scratchDir = 'tmp' if 'ekp' in gethostname() else 'nfs_scratch'
     return '/{0}/{1}/crab_projects/{2}'.format(scratchDir,uname,args.jobName)
 
 def get_config(args):
@@ -79,7 +79,7 @@ def get_config(args):
     if args.allowNonValid:
         config.Data.allowNonValidInputDataset = True
 
-    config.Site.storageSite         = 'T2_US_Wisconsin'
+    config.Site.storageSite         = 'T2_DE_DESY'
 
     return config
 
@@ -133,7 +133,7 @@ def submit_untracked_crab(args):
 
     # crab config
     config = get_config(args)
-    config.Site.whitelist = ['T2_US_Wisconsin'] # whitelist wisconsin so it only runs there
+    #config.Site.whitelist = ['T2_US_Wisconsin'] # whitelist wisconsin so it only runs there
 
 
     # get samples
@@ -312,7 +312,7 @@ def resubmit_crab(args):
 def get_condor_workArea(args):
     '''Get the job working area'''
     uname = os.environ['USER']
-    scratchDir = 'data' if 'uwlogin' in gethostname() else 'nfs_scratch'
+    scratchDir = 'data' if 'ekp' in gethostname() else 'nfs_scratch'
     return '/{0}/{1}/condor_projects/{2}'.format(scratchDir,uname,args.jobName)
 
 
@@ -330,7 +330,7 @@ def submit_untracked_condor(args):
     for inputDirectories in args.inputDirectory:
         for inputDirectory in glob.glob(inputDirectories):
             sampleList = hdfs_ls_directory(inputDirectory)
-            scratchDir = 'data' if 'uwlogin' in gethostname() else 'nfs_scratch'
+            scratchDir = 'data' if 'ekp' in gethostname() else 'nfs_scratch'
 
             workArea = get_condor_workArea(args)
             os.system('mkdir -p {0}'.format(workArea))
