@@ -79,7 +79,7 @@ def get_config(args):
     if args.allowNonValid:
         config.Data.allowNonValidInputDataset = True
 
-    config.Site.storageSite         = 'T2_US_Wisconsin'
+    config.Site.storageSite         = args.site
 
     return config
 
@@ -133,7 +133,7 @@ def submit_untracked_crab(args):
 
     # crab config
     config = get_config(args)
-    config.Site.whitelist = ['T2_US_Wisconsin'] # whitelist wisconsin so it only runs there
+    config.Site.whitelist = [args.site] # whitelist site, run on same site as files located
 
 
     # get samples
@@ -542,6 +542,10 @@ def parse_command_line(argv):
     parser_crabSubmit.add_argument('--publish', action='store_true', help='Publish output to DBS')
 
     parser_crabSubmit.add_argument('--dryrun', action='store_true', help='Do not submit jobs')
+
+    parser_crabSubmit.add_argument('--site', type=str, default='T2_US_Wisconsin',
+        help='Site to write output files. Can check write pemissions with `crab checkwrite --site=<SITE>`.'
+    )
 
     #parser_crabSubmit.add_argument('--scriptExe', action='store_true', help='This is a script, not a cmsRun config')
 
